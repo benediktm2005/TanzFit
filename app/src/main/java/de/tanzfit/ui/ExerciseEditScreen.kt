@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -104,7 +105,7 @@ fun ExerciseEditScreen(id: String?, nav: Nav) {
         nav.pop()
     }
 
-    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
         importing = true
         scope.launch {
@@ -160,7 +161,7 @@ fun ExerciseEditScreen(id: String?, nav: Nav) {
                 vf != null -> LoopingVideo(vf, Modifier.fillMaxWidth().height(320.dp))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { picker.launch(arrayOf("video/*")) }, enabled = !importing) {
+                Button(onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)) }, enabled = !importing) {
                     Icon(Icons.Default.VideoLibrary, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
                     Text(if (videoFile == null) "Video hinzufügen" else "Video ersetzen")
